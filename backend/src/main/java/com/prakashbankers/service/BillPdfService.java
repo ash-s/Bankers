@@ -7,7 +7,6 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.prakashbankers.dto.ApiDtos.CustomerResponse;
 import com.prakashbankers.dto.ApiDtos.LoanResponse;
 import com.prakashbankers.dto.ApiDtos.TransactionResponse;
-import com.prakashbankers.entity.TransactionType;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -38,7 +37,9 @@ public class BillPdfService {
             doc.add(new Paragraph("Pledge & Repledge Ledger — Customer Bill", body));
             doc.add(Chunk.NEWLINE);
 
-            doc.add(new Paragraph("Customer: " + customer.getName() + "  |  Phone: " + customer.getPhone(), body));
+            String phoneSuffix = customer.getPhone() == null || customer.getPhone().isBlank()
+                    ? "" : "  |  Phone: " + customer.getPhone();
+            doc.add(new Paragraph("Customer: " + customer.getName() + phoneSuffix, body));
             doc.add(new Paragraph("Code: " + customer.getCode() + "  |  Address: " + nullSafe(customer.getAddress()), body));
             doc.add(new Paragraph("ID Proof: " + nullSafe(customer.getIdProof()), body));
             doc.add(Chunk.NEWLINE);

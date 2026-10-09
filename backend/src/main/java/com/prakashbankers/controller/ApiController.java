@@ -106,7 +106,7 @@ public class ApiController {
     @PostMapping(value = "/customers", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CustomerResponse createCustomerMultipart(
             @RequestParam String name,
-            @RequestParam String phone,
+            @RequestParam(value = "phone", required = false) String phone,
             @RequestParam(required = false) String address,
             @RequestParam(required = false) String idProof,
             @RequestParam String material,

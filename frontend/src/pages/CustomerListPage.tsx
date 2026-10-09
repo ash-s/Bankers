@@ -115,7 +115,7 @@ export default function CustomerListPage() {
         onOk={() => form.submit()} confirmLoading={save.isPending}>
         <Form form={form} layout="vertical" onFinish={(v) => editItem && save.mutate({ id: editItem.id, data: v })}>
           <Form.Item name="name" label="Name" rules={[{ required: true }]}><Input /></Form.Item>
-          <Form.Item name="phone" label="Phone" rules={[{ required: true }]}><Input /></Form.Item>
+          <Form.Item name="phone" label="Phone"><Input /></Form.Item>
           <Form.Item name="address" label="Address"><Input.TextArea rows={2} /></Form.Item>
           <Form.Item name="idProof" label="ID Proof"><Input /></Form.Item>
         </Form>

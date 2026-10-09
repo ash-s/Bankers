@@ -2,7 +2,6 @@ package com.prakashbankers.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ public class Customer {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String phone;
 
     private String address;

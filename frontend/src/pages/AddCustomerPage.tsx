@@ -114,7 +114,7 @@ export default function AddCustomerPage() {
 
           <Col xs={24} md={8}>
 
-            <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
+            <Form.Item name="phone" label="Phone">
 
               <Input placeholder="10-digit mobile" />
 

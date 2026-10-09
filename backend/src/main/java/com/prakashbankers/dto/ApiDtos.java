@@ -195,9 +195,11 @@ public class ApiDtos {
     public static class NotificationSettingsRequest {
         private String duePreset;
         private Integer customDueDays;
-        private boolean pushEnabled;
-        private boolean smsEnabled;
-        private boolean whatsappEnabled;
+        // Wrapper types: a partial update that omits a flag must bind to null (no change),
+        // not fail with "Cannot map null into type boolean".
+        private Boolean pushEnabled;
+        private Boolean smsEnabled;
+        private Boolean whatsappEnabled;
         private String smsTemplate;
         private String whatsappTemplate;
     }
@@ -341,7 +343,9 @@ public class ApiDtos {
         private String shopAddress;
         private String shopPhone;
         private BigDecimal openingCapital;
-        private boolean openingCapitalSet;
+        // Wrapper type: PUT /settings is also used as a partial update, and omitting this
+        // field must bind to null instead of failing with "Cannot map null into type boolean".
+        private Boolean openingCapitalSet;
         private List<String> materials;
     }
 

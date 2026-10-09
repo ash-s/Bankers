@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -40,9 +41,9 @@ public class NotificationService {
         NotificationSettings s = getOrCreate();
         if (req.getDuePreset() != null) s.setDuePreset(req.getDuePreset());
         if (req.getCustomDueDays() != null) s.setCustomDueDays(req.getCustomDueDays());
-        s.setPushEnabled(req.isPushEnabled());
-        s.setSmsEnabled(req.isSmsEnabled());
-        s.setWhatsappEnabled(req.isWhatsappEnabled());
+        if (req.getPushEnabled() != null) s.setPushEnabled(req.getPushEnabled());
+        if (req.getSmsEnabled() != null) s.setSmsEnabled(req.getSmsEnabled());
+        if (req.getWhatsappEnabled() != null) s.setWhatsappEnabled(req.getWhatsappEnabled());
         if (req.getSmsTemplate() != null) s.setSmsTemplate(req.getSmsTemplate());
         if (req.getWhatsappTemplate() != null) s.setWhatsappTemplate(req.getWhatsappTemplate());
         return toSettingsResponse(settingsRepository.save(s));
@@ -59,6 +60,10 @@ public class NotificationService {
 
         loanRepository.findAllWithDetails().stream()
                 .filter(l -> l.getStatus() != LoanStatus.completed)
+                // Only notify once the loan has reached the configured "interest due"
+                // age (30d / 180d / 365d / custom) - younger loans are not due yet.
+                .filter(l -> l.getPledgeDate() != null
+                        && ChronoUnit.DAYS.between(l.getPledgeDate(), today) >= dueDays)
                 .forEach(l -> {
                     FinancialSummaryDto fin = interestEngine.calculate(FinancialMapper.loanInput(l, today));
                     if (fin.getOverdueCycles() < 1) return;
@@ -109,8 +114,9 @@ public class NotificationService {
         notificationRepository.findAll().forEach(n -> n.setReadFlag(true));
     }
 
+    /** Grace/term setting: "Notify when interest is due after ..." (see Settings UI). */
     private int resolveDueDays(NotificationSettings s) {
-        return switch (s.getDuePreset()) {
+        return switch (s.getDuePreset() != null ? s.getDuePreset() : "30d") {
             case "180d", "6m" -> 180;
             case "365d", "1y" -> 365;
             case "custom" -> s.getCustomDueDays() != null ? s.getCustomDueDays() : 30;
@@ -125,7 +131,7 @@ public class NotificationService {
                 .replace("{name}", l.getCustomer().getName())
                 .replace("{amount}", fin.getInterestBalance().toPlainString())
                 .replace("{item}", l.getItem())
-                .replace("{phone}", l.getCustomer().getPhone());
+                .replace("{phone}", l.getCustomer().getPhone() != null ? l.getCustomer().getPhone() : "");
         System.out.println("[SMS] " + l.getCustomer().getPhone() + ": " + msg);
     }
 

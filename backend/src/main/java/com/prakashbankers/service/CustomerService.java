@@ -103,7 +103,7 @@ public class CustomerService {
         Customer c = customerRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
         if (req.getName() != null) c.setName(req.getName());
-        if (req.getPhone() != null) c.setPhone(req.getPhone());
+        if (req.getPhone() != null) c.setPhone(blankToNull(req.getPhone()));
         if (req.getAddress() != null) c.setAddress(req.getAddress());
         if (req.getIdProof() != null) c.setIdProof(req.getIdProof());
         customerRepository.save(c);
@@ -135,7 +135,7 @@ public class CustomerService {
         Customer customer = Customer.builder()
                 .code(FinancialMapper.temporaryCode("CUST"))
                 .name(req.getName())
-                .phone(req.getPhone())
+                .phone(blankToNull(req.getPhone()))
                 .address(req.getAddress())
                 .idProof(req.getIdProof())
                 .build();
@@ -168,9 +168,12 @@ public class CustomerService {
         if (materialPhoto != null && !materialPhoto.isEmpty()) {
             saveMaterialPhoto(loan, materialPhoto);
         }
-        c.getLoans().add(loan);
-        customerRepository.saveAndFlush(c);
+        // Persist the loan directly. Saving it through the existing customer merge-cascades onto
+        // the transient loan and persists a *copy*, leaving this instance without an ID, which
+        // made orderedCode throw "Saved entity ID is required" (HTTP 500).
+        loanRepository.saveAndFlush(loan);
         loan.setLoanId(FinancialMapper.orderedCode("LN", loan.getId()));
+        c.getLoans().add(loan);
         customerRepository.saveAndFlush(c);
         return getCustomer(customerId);
     }
@@ -477,15 +480,8 @@ public class CustomerService {
                 .build();
     }
 
-    private TransactionResponse toTx(BorrowingTransaction t) {
-        return TransactionResponse.builder()
-                .id(t.getId())
-                .date(t.getDate())
-                .type(t.getType())
-                .amount(t.getAmount())
-                .note(t.getNote())
-                .rateAtPayment(t.getRateAtPayment())
-                .interestDueAtPayment(t.getInterestDueAtPayment())
-                .build();
+    /** Optional fields: treat blank input as "not provided" so we store NULL, not "". */
+    private static String blankToNull(String v) {
+        return v == null || v.isBlank() ? null : v.trim();
     }
 }

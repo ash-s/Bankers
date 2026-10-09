@@ -5,7 +5,6 @@ import com.prakashbankers.dto.ApiDtos.LoanResponse;
 import com.prakashbankers.dto.FinancialSummaryDto;
 import com.prakashbankers.entity.InterestType;
 import com.prakashbankers.entity.LoanStatus;
-import com.prakashbankers.entity.TransactionType;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
