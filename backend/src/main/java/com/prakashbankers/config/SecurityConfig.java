@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .accessDeniedHandler((request, response, exception) ->
                                 response.sendError(HttpStatus.FORBIDDEN.value(), "Access denied")))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

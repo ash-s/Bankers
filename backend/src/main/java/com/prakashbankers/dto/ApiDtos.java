@@ -31,6 +31,12 @@ public class ApiDtos {
     }
 
     @Data @Builder @NoArgsConstructor @AllArgsConstructor
+    public static class ChangePasswordRequest {
+        private String currentPassword;
+        private String newPassword;
+    }
+
+    @Data @Builder @NoArgsConstructor @AllArgsConstructor
     public static class TransactionResponse {
         private Long id;
         private LocalDate date;

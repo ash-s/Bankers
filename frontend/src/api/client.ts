@@ -118,6 +118,11 @@ export const authApi = {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     }),
+  changePassword: (currentPassword: string, newPassword: string) =>
+    api<void>('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword }),
+    }),
 };
 
 export const dashboardApi = {

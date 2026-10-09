@@ -132,6 +132,25 @@ cd C:\prakash-bankers\frontend
 
 ---
 
+### Starting from VS Code (one shortcut — best for daily use)
+
+The project ships VS Code tasks in `.vscode/tasks.json`:
+
+1. Open the project folder in VS Code (`File → Open Folder → C:\prakash-bankers`).
+2. Press **Ctrl+Shift+B** (or **Terminal → Run Task… → "Start App"**).
+3. Both servers start in two VS Code terminals:
+   - `Backend: run (Spring Boot :8082)` — wait for *"Started PrakashBankersApplication"*
+   - `Frontend: run (Vite :8081)` — wait for *"Local: http://localhost:8081/"*
+4. Open **http://localhost:8081** in the browser.
+5. To stop everything: **Terminal → Run Task… → "Stop App (free ports 8081 + 8082)"**
+   (or click the trash/terminate icon on each terminal).
+
+> MySQL must already be running (Windows service `MySQL80`, or `docker compose up -d`).
+> If VS Code shows *"cannot be loaded because running scripts is disabled"*, run this
+> once in a terminal: `Get-ChildItem -Recurse -Filter *.ps1 | Unblock-File`
+
+---
+
 ## 5. First-run data (what the client starts with)
 
 On an empty database the app seeds only the essentials:
@@ -142,6 +161,16 @@ On an empty database the app seeds only the essentials:
 
 There are **no sample customers, loans, banks or lenders** — the ledger starts
 empty. Change the shop name / address / phone under **Settings** after first login.
+
+### Changing the login password
+
+Log in, go to **Settings → Change Password**, enter the current password, the new
+password (minimum 6 characters) and confirm it. That's it — use the new password
+the next time you log in. There is no need to touch the database.
+
+> If you ever forget the password, it is stored as a BCrypt hash in the `users`
+> table, so it must be reset via SQL with a generated hash (the app has a
+> built-in changer, so this should not be needed).
 
 ---
 

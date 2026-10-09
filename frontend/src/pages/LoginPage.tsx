@@ -34,7 +34,7 @@ export default function LoginPage() {
           <Typography.Title level={3} style={{ margin: '8px 0 0' }}>Prakash Bankers</Typography.Title>
           <Typography.Text type="secondary">Pledge & Repledge CRM</Typography.Text>
         </div>
-        <Form layout="vertical" onFinish={onFinish} initialValues={{ username: 'admin', password: 'admin123' }}>
+        <Form layout="vertical" onFinish={onFinish} initialValues={{ username: 'admin' }}>
           <Form.Item name="username" label="Username" rules={[{ required: true }]}>
             <Input size="large" />
           </Form.Item>

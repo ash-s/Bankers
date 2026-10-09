@@ -1,5 +1,6 @@
 package com.prakashbankers.service;
 
+import com.prakashbankers.dto.ApiDtos.ChangePasswordRequest;
 import com.prakashbankers.dto.ApiDtos.LoginRequest;
 import com.prakashbankers.dto.ApiDtos.LoginResponse;
 import com.prakashbankers.entity.User;
@@ -36,5 +37,23 @@ public class AuthService {
                 .displayName(user.getDisplayName())
                 .role(user.getRole().name())
                 .build();
+    }
+
+    public void changePassword(String username, ChangePasswordRequest req) {
+        if (req.getNewPassword() == null || req.getNewPassword().length() < 6) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password must be at least 6 characters");
+        }
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required"));
+        if (req.getCurrentPassword() == null
+                || !passwordEncoder.matches(req.getCurrentPassword(), user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current password is incorrect");
+        }
+        if (passwordEncoder.matches(req.getNewPassword(), user.getPasswordHash())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "New password must be different from the current password");
+        }
+        user.setPasswordHash(passwordEncoder.encode(req.getNewPassword()));
+        userRepository.save(user);
     }
 }

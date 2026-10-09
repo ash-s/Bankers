@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Form, Input, InputNumber, Select, Space, Switch, Tag, message } from 'antd';
-import { masterApi, notificationApi } from '../api/client';
+import { masterApi, notificationApi, authApi } from '../api/client';
 
 export default function SettingsPage() {
   const qc = useQueryClient();
   const [newMat, setNewMat] = useState('');
   const [capitalForm] = Form.useForm();
   const [notifForm] = Form.useForm();
+  const [pwForm] = Form.useForm();
   const [preset, setPreset] = useState('30d');
 
   const { data: settings, refetch, isLoading: settingsLoading, isError: settingsError } = useQuery({
@@ -25,6 +26,16 @@ export default function SettingsPage() {
     onSuccess: () => {
       message.success('Notification settings saved');
       refetchNotif();
+    },
+    onError: (e) => message.error(String(e)),
+  });
+
+  const changePassword = useMutation({
+    mutationFn: (v: { currentPassword: string; newPassword: string }) =>
+      authApi.changePassword(v.currentPassword, v.newPassword),
+    onSuccess: () => {
+      message.success('Password changed. Use it the next time you log in.');
+      pwForm.resetFields();
     },
     onError: (e) => message.error(String(e)),
   });
@@ -140,6 +151,47 @@ export default function SettingsPage() {
             <Tag key={m}>{m}</Tag>
           ))}
         </Space>
+      </Card>
+
+      <Card title="Change Password" style={{ marginTop: 24 }}>
+        <Form form={pwForm} layout="vertical" onFinish={(v) => changePassword.mutate(v)}>
+          <Form.Item
+            name="currentPassword"
+            label="Current password"
+            rules={[{ required: true, message: 'Enter your current password' }]}
+          >
+            <Input.Password autoComplete="current-password" />
+          </Form.Item>
+          <Form.Item
+            name="newPassword"
+            label="New password"
+            rules={[
+              { required: true, message: 'Enter a new password' },
+              { min: 6, message: 'Password must be at least 6 characters' },
+            ]}
+          >
+            <Input.Password autoComplete="new-password" />
+          </Form.Item>
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm new password"
+            dependencies={['newPassword']}
+            rules={[
+              { required: true, message: 'Re-enter the new password' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('newPassword') === value) return Promise.resolve();
+                  return Promise.reject(new Error('Passwords do not match'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password autoComplete="new-password" />
+          </Form.Item>
+          <Button type="primary" htmlType="submit" loading={changePassword.isPending}>
+            Change Password
+          </Button>
+        </Form>
       </Card>
     </>
   );
