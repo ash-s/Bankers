@@ -172,6 +172,17 @@ the next time you log in. There is no need to touch the database.
 > table, so it must be reset via SQL with a generated hash (the app has a
 > built-in changer, so this should not be needed).
 
+### Latest update (October 2026)
+
+- **Plough/pledge "Quantity"** — a Quantity field is added next to **Item**
+  (type of ornament) when adding a customer or a new loan, and it is shown on
+  the loan card and on the PDF bill. Old loans without a quantity show as **1**.
+- **Lender phone is now optional** — no more forced phone number when adding a
+  lender.
+- The first backend start after this update **automatically adjusts the schema**
+  (makes the lender phone column optional). Just start the app as usual — no
+  manual SQL needed. The new `quantity` column is created by the app itself.
+
 ---
 
 ## 6. Day-to-day use & data safety
