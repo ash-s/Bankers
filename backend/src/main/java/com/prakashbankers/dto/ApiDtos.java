@@ -56,6 +56,7 @@ public class ApiDtos {
         private BigDecimal grossWeight;
         private BigDecimal netWeight;
         private String purity;
+        private Integer quantity;
         private BigDecimal pledgeAmount;
         private LocalDate pledgeDate;
         private InterestType interestType;
@@ -132,6 +133,7 @@ public class ApiDtos {
         private BigDecimal grossWeight;
         private BigDecimal netWeight;
         private String purity;
+        private Integer quantity;
         private BigDecimal pledgeAmount;
         private LocalDate pledgeDate;
         private InterestType interestType;
@@ -146,6 +148,7 @@ public class ApiDtos {
         private BigDecimal grossWeight;
         private BigDecimal netWeight;
         private String purity;
+        private Integer quantity;
         private BigDecimal pledgeAmount;
         private LocalDate pledgeDate;
         private InterestType interestType;

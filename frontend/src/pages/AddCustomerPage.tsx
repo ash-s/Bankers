@@ -16,6 +16,8 @@ import { customerApi, masterApi } from '../api/client';
 
 import { InterestCalcPanel } from '../components/InterestCalcPanel';
 
+import { purityOptions } from '../utils/purity';
+
 import { todayStr } from '../utils/format';
 
 
@@ -39,6 +41,8 @@ export default function AddCustomerPage() {
   const pledgeAmount = Form.useWatch('pledgeAmount', form);
 
   const pledgeDate = Form.useWatch('pledgeDate', form);
+
+  const material = Form.useWatch('material', form);
 
   const interestRate = Form.useWatch('interestRate', form);
 
@@ -164,7 +168,7 @@ export default function AddCustomerPage() {
 
           <Row gutter={16}>
 
-            <Col xs={24} md={6}>
+            <Col xs={24} md={5}>
 
               <Form.Item name="material" label="Material" rules={[{ required: true }]}>
 
@@ -174,11 +178,21 @@ export default function AddCustomerPage() {
 
             </Col>
 
-            <Col xs={24} md={6}>
+            <Col xs={24} md={5}>
 
               <Form.Item name="item" label="Item" rules={[{ required: true }]}>
 
                 <Input placeholder="e.g. 22K Necklace" />
+
+              </Form.Item>
+
+            </Col>
+
+            <Col xs={24} md={3}>
+
+              <Form.Item name="quantity" label="Quantity" initialValue={1}>
+
+                <InputNumber min={1} style={{ width: '100%' }} />
 
               </Form.Item>
 
@@ -204,11 +218,11 @@ export default function AddCustomerPage() {
 
             </Col>
 
-            <Col xs={24} md={4}>
+            <Col xs={24} md={3}>
 
               <Form.Item name="purity" label="Purity" rules={[{ required: true }]}>
 
-                <Input placeholder="22K" />
+                <Select options={purityOptions(material)} placeholder="Select purity" notFoundContent={null} />
 
               </Form.Item>
 

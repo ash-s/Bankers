@@ -125,7 +125,7 @@ export default function BorrowingsPage() {
             <Col xs={24} sm={12} md={8} lg={6}>
               <Form.Item name="lenderId" label="Lender" rules={[{ required: true }]}>
                 <Select placeholder="Select lender" showSearch optionFilterProp="label"
-                  options={lenders.map((l) => ({ value: l.id, label: `${l.name} (${l.phone})` }))} />
+                  options={lenders.map((l) => ({ value: l.id, label: l.phone ? `${l.name} (${l.phone})` : l.name }))} />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12} md={8} lg={4}>

@@ -28,6 +28,7 @@ public class Loan {
     private BigDecimal grossWeight;
     private BigDecimal netWeight;
     private String purity;
+    private Integer quantity;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal pledgeAmount;

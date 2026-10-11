@@ -145,7 +145,7 @@ public class MasterDataService {
         return lenderRepository.findAll().stream()
                 .filter(l -> search == null || search.isBlank()
                         || l.getName().toLowerCase().contains(search.toLowerCase())
-                        || l.getPhone().contains(search))
+                        || (l.getPhone() != null && l.getPhone().contains(search)))
                 .map(this::toLenderResponse)
                 .toList();
     }

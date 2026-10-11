@@ -46,7 +46,8 @@ public class BillPdfService {
 
             doc.add(new Paragraph("Pledge Details — " + loan.getLoanId(), head));
             doc.add(new Paragraph("Item: " + loan.getItem() + " (" + loan.getMaterial() + ", " + loan.getPurity() + ")", body));
-            doc.add(new Paragraph("Weight: Gross " + loan.getGrossWeight() + "g / Net " + loan.getNetWeight() + "g", body));
+            int qty = loan.getQuantity() != null ? loan.getQuantity() : 1;
+            doc.add(new Paragraph("Quantity: " + qty + "  |  Weight: Gross " + loan.getGrossWeight() + "g / Net " + loan.getNetWeight() + "g", body));
             doc.add(new Paragraph("Pledge Date: " + loan.getPledgeDate().format(DF) + "  |  Rate: " + loan.getInterestRate() + "% " + loan.getInterestType(), body));
             doc.add(new Paragraph("Status: " + loan.getStatus().name().toUpperCase(), body));
             doc.add(Chunk.NEWLINE);

@@ -83,7 +83,7 @@ function LenderModal({ open, title, onClose, form, loading, onFinish }: {
     <Modal open={open} title={title} onCancel={onClose} onOk={() => form.submit()} confirmLoading={loading}>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item name="name" label="Name" rules={[{ required: true }]}><Input /></Form.Item>
-        <Form.Item name="phone" label="Phone" rules={[{ required: true }]}><Input /></Form.Item>
+        <Form.Item name="phone" label="Phone"><Input placeholder="Optional" /></Form.Item>
         <Form.Item name="address" label="Address"><Input.TextArea rows={2} /></Form.Item>
         <Form.Item name="defaultRate" label="Default Rate (%)"><InputNumber min={0} step={0.1} style={{ width: '100%' }} /></Form.Item>
       </Form>

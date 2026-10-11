@@ -12,6 +12,7 @@ import { QueryState } from '../components/QueryState';
 import { customerApi, masterApi } from '../api/client';
 import { PaymentPreview } from '../components/PaymentPreview';
 import { InterestCalcPanel } from '../components/InterestCalcPanel';
+import { purityOptions } from '../utils/purity';
 import type { Loan } from '../types';
 import { calcLoanFinancials } from '../utils/interestCalc';
 import { fmtDate, fmtMoney, todayStr } from '../utils/format';
@@ -294,6 +295,7 @@ function LoanCard({ loan, compact, highlighted, onPay, onRepledge, onClose, onRe
             <div className="loan-meta-item"><label>Pledge Date</label><span>{fmtDate(loan.pledgeDate)}</span></div>
             <div className="loan-meta-item"><label>Material</label><span>{loan.material}</span></div>
             <div className="loan-meta-item"><label>Purity</label><span>{loan.purity}</span></div>
+            <div className="loan-meta-item"><label>Quantity</label><span>{loan.quantity ?? 1}</span></div>
             <div className="loan-meta-item"><label>Gross / Net</label><span>{loan.grossWeight}g / {loan.netWeight}g</span></div>
             <div className="loan-meta-item"><label>Rate</label><span>{loan.interestRate}% {loan.interestType}</span></div>
             <div className="loan-meta-item"><label>Pledge Amount</label><span>{fmtMoney(loan.pledgeAmount)}</span></div>
@@ -543,6 +545,7 @@ function AddLoanModal({ customerId, materials, onClose, onDone }: {
 
   const pledgeAmount = Form.useWatch('pledgeAmount', form);
   const pledgeDate = Form.useWatch('pledgeDate', form);
+  const material = Form.useWatch('material', form);
   const interestRate = Form.useWatch('interestRate', form);
   const interestType = Form.useWatch('interestType', form) ?? 'monthly';
 
@@ -566,17 +569,18 @@ function AddLoanModal({ customerId, materials, onClose, onDone }: {
   return (
     <Modal open centered title="Add New Loan" onCancel={onClose} onOk={() => form.submit()} confirmLoading={loading} width={600}
       styles={{ body: { maxHeight: 'calc(100vh - 190px)', overflowY: 'auto' } }}>
-      <Form form={form} layout="vertical" onFinish={submit} initialValues={{ pledgeDate: todayStr(), interestType: 'monthly', interestRate: 2 }}>
+      <Form form={form} layout="vertical" onFinish={submit} initialValues={{ pledgeDate: todayStr(), interestType: 'monthly', interestRate: 2, quantity: 1 }}>
         <Row gutter={12}>
-          <Col span={12}><Form.Item name="material" label="Material" rules={[{ required: true }]}>
+          <Col span={10}><Form.Item name="material" label="Material" rules={[{ required: true }]}>
             <Select options={materials.map((m) => ({ value: m, label: m }))} />
           </Form.Item></Col>
-          <Col span={12}><Form.Item name="item" label="Item Description" rules={[{ required: true }]}><Input /></Form.Item></Col>
+          <Col span={10}><Form.Item name="item" label="Item Description" rules={[{ required: true }]}><Input /></Form.Item></Col>
+          <Col span={4}><Form.Item name="quantity" label="Qty"><InputNumber min={1} style={{ width: '100%' }} /></Form.Item></Col>
         </Row>
         <Row gutter={12}>
           <Col span={8}><Form.Item name="grossWeight" label="Gross (g)" rules={[{ required: true }]}><InputNumber min={0} style={{ width: '100%' }} /></Form.Item></Col>
           <Col span={8}><Form.Item name="netWeight" label="Net (g)" rules={[{ required: true }]}><InputNumber min={0} style={{ width: '100%' }} /></Form.Item></Col>
-          <Col span={8}><Form.Item name="purity" label="Purity" rules={[{ required: true }]}><Input placeholder="22K" /></Form.Item></Col>
+          <Col span={8}><Form.Item name="purity" label="Purity" rules={[{ required: true }]}><Select options={purityOptions(material)} placeholder="Select purity" notFoundContent={null} /></Form.Item></Col>
         </Row>
         <Row gutter={12}>
           <Col span={8}><Form.Item name="pledgeAmount" label="Amount (₹)" rules={[{ required: true }]}><InputNumber min={0} style={{ width: '100%' }} /></Form.Item></Col>

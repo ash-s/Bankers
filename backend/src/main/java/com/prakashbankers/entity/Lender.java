@@ -22,7 +22,6 @@ public class Lender {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String phone;
 
     private String address;

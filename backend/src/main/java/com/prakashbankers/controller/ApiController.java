@@ -114,6 +114,7 @@ public class ApiController {
             @RequestParam java.math.BigDecimal grossWeight,
             @RequestParam java.math.BigDecimal netWeight,
             @RequestParam String purity,
+            @RequestParam(value = "quantity", required = false) Integer quantity,
             @RequestParam java.math.BigDecimal pledgeAmount,
             @RequestParam java.time.LocalDate pledgeDate,
             @RequestParam String interestType,
@@ -124,7 +125,7 @@ public class ApiController {
         CreateCustomerRequest data = CreateCustomerRequest.builder()
                 .name(name).phone(phone).address(address).idProof(idProof)
                 .material(material).item(item).grossWeight(grossWeight).netWeight(netWeight)
-                .purity(purity).pledgeAmount(pledgeAmount).pledgeDate(pledgeDate)
+                .purity(purity).quantity(quantity).pledgeAmount(pledgeAmount).pledgeDate(pledgeDate)
                 .interestType(com.prakashbankers.entity.InterestType.valueOf(interestType))
                 .interestRate(interestRate)
                 .prepaidFirstPeriod(prepaidFirstPeriod)
@@ -145,6 +146,7 @@ public class ApiController {
             @RequestParam java.math.BigDecimal grossWeight,
             @RequestParam java.math.BigDecimal netWeight,
             @RequestParam String purity,
+            @RequestParam(value = "quantity", required = false) Integer quantity,
             @RequestParam java.math.BigDecimal pledgeAmount,
             @RequestParam java.time.LocalDate pledgeDate,
             @RequestParam String interestType,
@@ -153,7 +155,7 @@ public class ApiController {
             @RequestParam(value = "materialPhoto", required = false) MultipartFile materialPhoto) {
         CreateLoanRequest req = CreateLoanRequest.builder()
                 .material(material).item(item).grossWeight(grossWeight).netWeight(netWeight)
-                .purity(purity).pledgeAmount(pledgeAmount).pledgeDate(pledgeDate)
+                .purity(purity).quantity(quantity).pledgeAmount(pledgeAmount).pledgeDate(pledgeDate)
                 .interestType(com.prakashbankers.entity.InterestType.valueOf(interestType))
                 .interestRate(interestRate)
                 .prepaidFirstPeriod(prepaidFirstPeriod)

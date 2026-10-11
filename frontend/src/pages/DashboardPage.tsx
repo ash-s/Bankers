@@ -96,11 +96,14 @@ function DashboardContent({ data, navigate }: { data: NonNullable<Awaited<Return
         <div key={section.title} className="dash-section">
           <Typography.Title level={5} className="dash-section-title">{section.title}</Typography.Title>
           <Row gutter={[16, 16]} style={{ marginBottom: 8 }}>
-            {section.kpis.map((k) => (
-              <Col xs={24} sm={12} lg={8} key={k.key}>
-                <KpiCard {...k} onClick={() => navigate(k.path)} />
-              </Col>
-            ))}
+            {section.kpis.map((k) => {
+              const { key: _key, ...kpiProps } = k;
+              return (
+                <Col xs={24} sm={12} lg={8} key={_key}>
+                  <KpiCard {...kpiProps} onClick={() => navigate(k.path)} />
+                </Col>
+              );
+            })}
           </Row>
         </div>
       ))}

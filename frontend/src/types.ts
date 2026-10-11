@@ -57,6 +57,7 @@ export interface Loan {
   grossWeight: number;
   netWeight: number;
   purity: string;
+  quantity?: number;
   pledgeAmount: number;
   pledgeDate: string;
   interestType: 'monthly' | 'daily';

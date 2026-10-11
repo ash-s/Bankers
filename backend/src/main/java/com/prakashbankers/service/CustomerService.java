@@ -145,8 +145,8 @@ public class CustomerService {
         }
 
         Loan loan = buildLoan(customer, req.getMaterial(), req.getItem(), req.getGrossWeight(), req.getNetWeight(),
-                req.getPurity(), req.getPledgeAmount(), req.getPledgeDate(), req.getInterestType(), req.getInterestRate(),
-                req.getPrepaidFirstPeriod());
+                req.getPurity(), req.getQuantity(), req.getPledgeAmount(), req.getPledgeDate(), req.getInterestType(),
+                req.getInterestRate(), req.getPrepaidFirstPeriod());
         if (materialPhoto != null && !materialPhoto.isEmpty()) {
             saveMaterialPhoto(loan, materialPhoto);
         }
@@ -163,8 +163,8 @@ public class CustomerService {
         Customer c = customerRepository.findById(customerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
         Loan loan = buildLoan(c, req.getMaterial(), req.getItem(), req.getGrossWeight(), req.getNetWeight(),
-                req.getPurity(), req.getPledgeAmount(), req.getPledgeDate(), req.getInterestType(), req.getInterestRate(),
-                req.getPrepaidFirstPeriod());
+                req.getPurity(), req.getQuantity(), req.getPledgeAmount(), req.getPledgeDate(), req.getInterestType(),
+                req.getInterestRate(), req.getPrepaidFirstPeriod());
         if (materialPhoto != null && !materialPhoto.isEmpty()) {
             saveMaterialPhoto(loan, materialPhoto);
         }
@@ -337,8 +337,8 @@ public class CustomerService {
     }
 
     private Loan buildLoan(Customer customer, String material, String item, BigDecimal gross, BigDecimal net,
-                           String purity, BigDecimal amount, LocalDate date, InterestType type, BigDecimal rate,
-                           Boolean prepaidFirstPeriod) {
+                           String purity, Integer quantity, BigDecimal amount, LocalDate date, InterestType type,
+                           BigDecimal rate, Boolean prepaidFirstPeriod) {
         InterestType interestType = type != null ? type : InterestType.monthly;
         LocalDate pledgeDate = date != null ? date : LocalDate.now();
         Loan loan = Loan.builder()
@@ -349,6 +349,7 @@ public class CustomerService {
                 .grossWeight(gross)
                 .netWeight(net)
                 .purity(purity)
+                .quantity(quantity != null && quantity > 0 ? quantity : 1)
                 .pledgeAmount(amount)
                 .pledgeDate(pledgeDate)
                 .interestType(interestType)
@@ -443,6 +444,7 @@ public class CustomerService {
                 .grossWeight(l.getGrossWeight())
                 .netWeight(l.getNetWeight())
                 .purity(l.getPurity())
+                .quantity(l.getQuantity())
                 .pledgeAmount(l.getPledgeAmount())
                 .pledgeDate(l.getPledgeDate())
                 .interestType(l.getInterestType())
